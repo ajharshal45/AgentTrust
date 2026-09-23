@@ -73,6 +73,15 @@ class Pipeline:
         for stage_fn in self.stages:
             result: StageResult = stage_fn(request_context)
 
+            # BUG FIX: once an agent passes Stage 1 (signature_check), its
+            # request is no longer unauthenticated traffic. Credit it back from
+            # the raw IP throttle counter so the legitimate agent is only subject
+            # to its per-agent quota (Stage 2: rate_limiter), not the IP flood
+            # limit shared with all the attacker personas hitting from ::1.
+            if result.verdict == "pass" and result.stage_name == "signature_check":
+                from sentinel.stages.ip_throttle import release_authenticated_request
+                release_authenticated_request(request_context.get("client_ip", "127.0.0.1"))
+
             if result.verdict == "block":
                 reason_str = result.reason or f"Blocked by stage '{result.stage_name}'"
                 ledger.log_decision(

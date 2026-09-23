@@ -17,11 +17,32 @@ def reset_ip_throttle_state() -> None:
     _ip_timestamps.clear()
 
 
+def release_authenticated_request(client_ip: str) -> None:
+    """Credit back one request from the IP throttle counter for a verified agent.
+
+    Called by the pipeline after Stage 1 (signature check) passes. The design
+    rationale: Stage 0 IP throttle exists to block unauthenticated connection
+    floods cheaply, before doing any crypto. Once an agent proves its identity
+    cryptographically (Stage 1), it is no longer 'unauthenticated traffic' and
+    should be rated by its per-agent quota (Stage 2: rate_limiter) instead of
+    the raw IP flood limit.
+
+    Without this, running many personas from localhost (all sharing IP ::1)
+    causes the legitimate agent to be falsely blocked by the IP limit after
+    attacker requests have filled the window — even though every attacker was
+    correctly rejected at Stage 1.
+    """
+    timestamps = _ip_timestamps.get(client_ip)
+    if timestamps:
+        # Remove the most recently added timestamp (the one added by this request)
+        _ip_timestamps[client_ip] = timestamps[:-1]
+
+
 def run(request_context: dict) -> StageResult:
     """Run identity-agnostic IP throttling check.
 
-    Runs FIRST in the pipeline (before signature verification) to drop cheap network floods
-    without trusting any unverified agent identity claims in the payload.
+    Runs FIRST in the pipeline (before signature verification) to drop cheap
+    network floods without trusting any unverified agent identity claims.
 
     Args:
         request_context: Context dictionary containing 'client_ip'.
@@ -40,7 +61,11 @@ def run(request_context: dict) -> StageResult:
     if len(valid_timestamps) >= IP_THROTTLE_BURST:
         return StageResult(
             verdict="block",
-            reason=f"IP throttle exceeded: {len(valid_timestamps) + 1} requests in {IP_THROTTLE_WINDOW:.0f}s from IP {client_ip} (max {IP_THROTTLE_BURST})",
+            reason=(
+                f"IP throttle exceeded: {len(valid_timestamps) + 1} requests "
+                f"in {IP_THROTTLE_WINDOW:.0f}s from IP {client_ip} "
+                f"(max {IP_THROTTLE_BURST})"
+            ),
             stage_name="ip_throttle",
         )
 
