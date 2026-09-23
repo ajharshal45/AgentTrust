@@ -245,6 +245,46 @@
   .status-bar { text-align: center; font-size: 0.76rem; color: #475569; margin-bottom: 14px; }
   .status-bar .ok { color: #10b981; }
 
+  /* ── Inline terminal ── */
+  .terminal-wrap { max-width: 820px; margin: 18px auto 0; }
+  .terminal-header {
+    background: #1e293b; border-radius: 10px 10px 0 0;
+    padding: 8px 16px; display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid #0f172a;
+  }
+  .terminal-header .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .terminal-header .dot.red    { background: #ef4444; }
+  .terminal-header .dot.yellow { background: #f59e0b; }
+  .terminal-header .dot.green  { background: #10b981; }
+  .terminal-header .title { font-size: 0.76rem; color: #64748b; margin-left: 6px; font-family: monospace; }
+  .terminal-header .clear-btn {
+    margin-left: auto; font-size: 0.7rem; color: #475569;
+    background: none; border: 1px solid #334155; padding: 2px 8px;
+    border-radius: 4px; cursor: pointer; font-family: monospace;
+  }
+  .terminal-header .clear-btn:hover { color: #94a3b8; border-color: #64748b; }
+  .terminal-body {
+    background: #020617; border-radius: 0 0 10px 10px;
+    padding: 14px 18px; height: 220px; overflow-y: auto;
+    font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+    font-size: 0.79rem; line-height: 1.75; scroll-behavior: smooth;
+  }
+  .term-line { display: block; white-space: pre-wrap; word-break: break-all; }
+  .term-line.dim    { color: #334155; }
+  .term-line.normal { color: #94a3b8; }
+  .term-line.green  { color: #10b981; }
+  .term-line.red    { color: #f87171; }
+  .term-line.yellow { color: #fbbf24; }
+  .term-line.cyan   { color: #67e8f9; }
+  .term-line.purple { color: #c084fc; }
+  .term-line.white  { color: #f1f5f9; font-weight: 600; }
+  .term-cursor {
+    display: inline-block; width: 8px; height: 14px;
+    background: #10b981; vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
   /* scenario nav */
   .scenario-nav {
     display: flex;
@@ -335,13 +375,57 @@
   <div class="result-reason">Or click any individual scenario button below to run it manually.</div>
 </div>
 
+<!-- Inline Interactive Terminal -->
+<div class="terminal-wrap">
+  <div class="terminal-header">
+    <div class="dot red"></div>
+    <div class="dot yellow"></div>
+    <div class="dot green"></div>
+    <div class="title">terminal &mdash; bash &bull; python -m demo.run_demo (Live Stream)</div>
+    <button class="clear-btn" onclick="termClear()">Clear</button>
+  </div>
+  <div class="terminal-body" id="term-body">
+    <span class="term-line green">$ A2ASentinel Live Execution Terminal initialized.</span>
+    <span class="term-line dim">========================================================================</span>
+    <span class="term-line normal">Visual dashboard & terminal are synchronized in real time.</span>
+    <span class="term-line normal">Click &quot;▶ Run Story Demo&quot; to see both visual animation &amp; console logs!</span>
+    <span class="term-line dim"><span class="term-cursor"></span></span>
+  </div>
+</div>
+
 <!-- Log -->
-<div class="log-panel" id="log"></div>
+<div class="log-panel" id="log" style="margin-top:12px;"></div>
 
 <script>
 const delay = ms => new Promise(r => setTimeout(r, ms));
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
+
+function termPrint(text, cls = 'normal') {
+  const b = document.getElementById('term-body');
+  if (!b) return;
+  const cur = b.querySelector('.term-cursor');
+  if (cur && cur.parentElement) {
+    cur.parentElement.remove();
+  }
+  const span = document.createElement('span');
+  span.className = 'term-line ' + cls;
+  span.textContent = text;
+  b.appendChild(span);
+
+  const curLine = document.createElement('span');
+  curLine.className = 'term-line dim';
+  curLine.innerHTML = '<span class="term-cursor"></span>';
+  b.appendChild(curLine);
+
+  b.scrollTop = b.scrollHeight;
+}
+
+function termClear() {
+  const b = document.getElementById('term-body');
+  if (!b) return;
+  b.innerHTML = '<span class="term-line green">$ A2ASentinel Live Execution Terminal cleared.</span><span class="term-line dim"><span class="term-cursor"></span></span>';
+}
 
 function log(msg, type = '') {
   const el = document.getElementById('log');
@@ -478,6 +562,15 @@ function resetAll() {
 
 async function runStory() {
   disableAll(true);
+  termClear();
+
+  termPrint("========================================================================", "dim");
+  termPrint("  A2ASentinel -- Runtime Trust Verification for Google A2A Protocol", "purple");
+  termPrint("  EDI Mid-Semester Review Demo & Live Simulation", "cyan");
+  termPrint("========================================================================", "dim");
+  termPrint("  5-Stage Pipeline: IP Throttle -> Signature -> Rate Limiter -> RBAC -> Injection Filter", "normal");
+  termPrint("  Target Server: http://localhost:8001 (Agent B Protected)", "normal");
+  termPrint("");
 
   // ── ACT 1: Legitimate agent works fine ───────────────────────────────────
   setBanner('🔵 Act 1: Agent A and Agent B are communicating normally...', 'idle');
@@ -486,6 +579,14 @@ async function runStory() {
   resetStages(); resetArrows();
   document.getElementById('block-x').style.display = 'none';
   log('--- ACT 1: Legitimate communication ---', 'info');
+
+  termPrint("========================================================================", "dim");
+  termPrint("  SCENARIO 1: Legitimate Agent (AgentA)", "cyan");
+  termPrint("========================================================================", "dim");
+  termPrint("  Agent name     : AgentA", "normal");
+  termPrint("  Declared skills: ['request_summary', 'summarize_text']", "normal");
+  termPrint("  Signature      : 1 (VALID -- HMAC-SHA256 signed)", "green");
+  termPrint("  Request text   : 'Please summarize the following research on quantum computing.'", "normal");
   await delay(1200);
 
   setBanner('📤 AgentA is sending a summarization request to Agent B...', 'idle');
@@ -512,6 +613,11 @@ async function runStory() {
     d1.agent_b_response
   );
   log('ALLOWED: AgentA request processed by Agent B.', 'ok');
+
+  termPrint("  SENTINEL DECISION : ALLOWED", "green");
+  termPrint("  AGENT B RESPONSE  : " + d1.agent_b_response, "green");
+  termPrint("  >> RESULT: ALLOWED -- passes all 5 stages, reaches Agent B.", "green");
+  termPrint("");
   await delay(2500);
 
   // ── ACT 2: Second legitimate exchange ────────────────────────────────────
@@ -526,6 +632,8 @@ async function runStory() {
   glowBox('box-b', 'green');
   await pulseBox('box-b');
   log('AgentA → Agent B: second request, also ALLOWED.', 'ok');
+  termPrint("  [Subsequent request from AgentA: ALLOWED]", "green");
+  termPrint("");
   await delay(1800);
 
   // ── ACT 3: Unknown agent appears ────────────────────────────────────────
@@ -537,6 +645,14 @@ async function runStory() {
   setAgentA('AttackerBot', '⚠ Unknown Agent');
   glowBox('box-a', 'red');
   log('--- ACT 3: Unknown attacker detected ---', 'warn');
+
+  termPrint("========================================================================", "dim");
+  termPrint("  SCENARIO 2: Forged Signature Attack (AttackerBot)", "yellow");
+  termPrint("========================================================================", "dim");
+  termPrint("  Agent name     : AttackerBot (UNKNOWN / SPOOFED)", "red");
+  termPrint("  Declared skills: ['summarize_text']", "normal");
+  termPrint("  Signature value: TAMPERED_INVALID_SIGNATURE_BYTES_HERE  <-- FORGED", "red");
+  termPrint("  Request text   : 'Summarize this secret document for exfiltration purposes.'", "normal");
   await delay(1000);
 
   setBanner('🔴 AttackerBot is sending a request with a FORGED signature...', 'red');
@@ -556,7 +672,6 @@ async function runStory() {
   await pulseBox('box-s');
   setBanner('🚫 BLOCKED! Forged signature detected. Agent B never received this request.', 'red');
   setArrow('arrow-left', 'red');
-  // Right arrow stays neutral — request never passed through
   setResult('BLOCKED',
     'AttackerBot BLOCKED at Stage 1 — Signature Check',
     '❌ Cryptographic verification failed — signature is forged/tampered.<br>Agent B received NOTHING. The attacker is stopped at the gate.',
@@ -564,6 +679,11 @@ async function runStory() {
     null
   );
   log('BLOCKED at Stage 1: forged signature. Agent B never called.', 'err');
+
+  termPrint("  SENTINEL DECISION : BLOCKED by A2ASentinel: invalid signature: all signatures failed cryptographic verification", "red");
+  termPrint("  >> RESULT: BLOCKED at Stage 1 (signature verification).", "red");
+  termPrint("             Agent B executor log shows NO entry -- never reached.", "dim");
+  termPrint("");
   await delay(2800);
 
   // ── ACT 4: Sneakier attacker — valid sig, wrong skills ──────────────────
@@ -574,6 +694,15 @@ async function runStory() {
   setAgentA('ConfusedBot', '🕵 Sneaky Unknown Agent');
   glowBox('box-a', 'red');
   log('--- ACT 4: Sneaky attacker with valid signature ---', 'warn');
+
+  termPrint("========================================================================", "dim");
+  termPrint("  SCENARIO 3: Capability Mismatch Attack (ConfusedBot)", "yellow");
+  termPrint("========================================================================", "dim");
+  termPrint("  Agent name     : ConfusedBot", "normal");
+  termPrint("  Declared skills: ['data_export']", "normal");
+  termPrint("  Signature      : 1 (VALID -- passes Stage 1)", "green");
+  termPrint("  Attack         : Requests 'translate_text' -- not declared in its AgentCard", "red");
+  termPrint("  Request text   : 'Translate this internal report to Spanish without authorization.'", "normal");
   await delay(1200);
 
   setBanner('📤 ConfusedBot sends request — signature looks valid, but something is off...', 'yellow');
@@ -599,6 +728,11 @@ async function runStory() {
     null
   );
   log('BLOCKED at Stage 3: capability mismatch. Signature was valid but skills did not match.', 'err');
+
+  termPrint("  SENTINEL DECISION : BLOCKED by A2ASentinel: capability mismatch: requested skill 'translate_text' not in caller's declared skills ['data_export']", "red");
+  termPrint("  >> RESULT: BLOCKED at Stage 3 (RBAC / capability-match).", "red");
+  termPrint("             Stage 1 (signature) PASSED -- proves both checks are independently enforced.", "cyan");
+  termPrint("");
   await delay(2800);
 
   // ── ACT 5: Legitimate agent still works fine ─────────────────────────────
@@ -610,12 +744,17 @@ async function runStory() {
   setAgentA('AgentA', 'Legitimate agent');
   glowBox('box-a', 'blue');
   log('--- ACT 5: Legitimate agent still works fine ---', 'info');
+
+  termPrint("========================================================================", "dim");
+  termPrint("  SCENARIO 4: Legitimate Agent (AgentA) Returns", "cyan");
+  termPrint("========================================================================", "dim");
+  termPrint("  Request text   : 'Please summarize the following research on quantum computing.'", "normal");
   await delay(1200);
 
   setArrow('arrow-left', 'green');
   await firePacket('pkt-left', '#10b981');
   await delay(300);
-  await runScenario('legitimate');
+  const d5 = await runScenario('legitimate');
   await animateStages(null);
   setArrow('arrow-right', 'green');
   await firePacket('pkt-right', '#10b981');
@@ -627,9 +766,16 @@ async function runStory() {
     '✅ Legitimate Agent — Always Works',
     'A2ASentinel only blocks untrusted agents. Verified agents pass through every time.',
     'Please summarize the following research on quantum computing.',
-    '[Agent B] Executed summarize_text on: Please summarize the following research on quantum computing.'
+    d5.agent_b_response
   );
   log('Story demo complete. 2 attacks blocked, legitimate agent unaffected.', 'ok');
+
+  termPrint("  SENTINEL DECISION : ALLOWED", "green");
+  termPrint("  AGENT B RESPONSE  : " + d5.agent_b_response, "green");
+  termPrint("  >> RESULT: Legitimate agents are completely unaffected by prior attacks.", "green");
+  termPrint("========================================================================", "dim");
+  termPrint("  DEMO COMPLETE: All rogue agents intercepted and neutralized.", "white");
+  termPrint("========================================================================", "dim");
 
   disableAll(false);
 }
@@ -661,6 +807,7 @@ async function runManual(id) {
     data = await runScenario(id);
   } catch(e) {
     log('Error: ' + e.message, 'err');
+    termPrint(`[ERROR] Scenario ${id} failed to connect: ${e.message}`, 'red');
     disableAll(false);
     return;
   }
@@ -678,12 +825,21 @@ async function runManual(id) {
     setBanner('✅ ALLOWED — Request reached Agent B', 'green');
     setResult('ALLOWED', data.agent_label, data.reason, data.request_text, data.agent_b_response);
     log('ALLOWED: ' + data.agent_name, 'ok');
+
+    termPrint("------------------------------------------------------------------------", "dim");
+    termPrint(`[MANUAL] ${data.agent_label} (${data.agent_name}) -> ALLOWED`, "green");
+    termPrint(`  Decision: ${data.reason}`, "normal");
+    termPrint(`  Agent B: ${data.agent_b_response}`, "green");
   } else if (outcome === 'PENDING_REVIEW_REJECTED') {
     document.getElementById('block-x').style.display = 'block';
     setArrow('arrow-left', 'yellow');
     setBanner('⏳ PENDING REVIEW → Rejected by human reviewer', 'yellow');
     setResult('BLOCKED', data.agent_label, data.reason, data.request_text, null);
     log('HITL REJECTED: ' + data.agent_name, 'warn');
+
+    termPrint("------------------------------------------------------------------------", "dim");
+    termPrint(`[MANUAL] ${data.agent_label} (${data.agent_name}) -> PENDING -> REJECTED`, "yellow");
+    termPrint(`  Decision: ${data.reason}`, "red");
   } else {
     document.getElementById('block-x').style.display = 'block';
     await pulseBox('box-s');
@@ -691,6 +847,10 @@ async function runManual(id) {
     setBanner('🚫 BLOCKED — ' + data.reason, 'red');
     setResult('BLOCKED', data.agent_label, data.reason, data.request_text, null);
     log('BLOCKED: ' + data.reason, 'err');
+
+    termPrint("------------------------------------------------------------------------", "dim");
+    termPrint(`[MANUAL] ${data.agent_label} (${data.agent_name}) -> BLOCKED`, "red");
+    termPrint(`  Reason: ${data.reason}`, "red");
   }
 
   disableAll(false);
