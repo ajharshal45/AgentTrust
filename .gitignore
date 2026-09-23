@@ -30,5 +30,8 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-# Logs
+# Logs and Runtime State
 *.log
+sentinel/audit_ledger.jsonl
+sentinel/alert_queue.json
+
