@@ -114,15 +114,23 @@
   }
   @keyframes travel { from { left: 0% } to { left: 88% } }
 
-  /* Blocked X at sentinel */
+  /* Blocked badge at sentinel */
   #block-x {
     position: absolute;
-    top: -18px; left: 50%;
+    top: -14px; left: 50%;
     transform: translateX(-50%);
-    font-size: 1.6rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    background: #ef4444;
+    color: #ffffff;
+    padding: 3px 10px;
+    border-radius: 6px;
     display: none;
     animation: popIn 0.3s ease;
     z-index: 20;
+    border: 1px solid #b91c1c;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
   }
   @keyframes popIn { from{transform:translateX(-50%) scale(0)} to{transform:translateX(-50%) scale(1)} }
 
@@ -299,14 +307,14 @@
 <body>
 
 <header>
-  <h1>&#x1F6E1; AgentTrust</h1>
+  <h1>AgentTrust</h1>
   <p>Runtime Trust Verification for Google's A2A Protocol &mdash; EDI Mid-Semester Demo</p>
 </header>
 
 <div class="status-bar" id="status-bar">Connecting&hellip;</div>
 
 <!-- Narrative banner -->
-<div id="story-banner" class="idle">Click <b>&#x25B6; Run Story Demo</b> to watch the full simulation automatically</div>
+<div id="story-banner" class="idle">Click <b>Run Story Demo</b> to watch the full simulation automatically</div>
 
 <!-- Architecture -->
 <div class="arch">
@@ -327,7 +335,7 @@
 
   <div class="agent-box" id="box-s" style="position:relative;">
     <div style="position:relative;">
-      <div id="block-x">&#x1F6AB;</div>
+      <div id="block-x">BLOCKED</div>
     </div>
     <div class="role">Security Gateway</div>
     <div class="name">AgentTrust</div>
@@ -352,17 +360,17 @@
 
 <!-- Pipeline -->
 <div class="pipeline">
-  <div class="stage" id="s0"><div class="stage-num">Stage 0</div><div class="stage-name">IP Throttle</div><div class="stage-icon">&#x23F1;</div></div>
-  <div class="stage" id="s1"><div class="stage-num">Stage 1</div><div class="stage-name">Signature</div><div class="stage-icon">&#x1F511;</div></div>
-  <div class="stage" id="s2"><div class="stage-num">Stage 2</div><div class="stage-name">Rate Limiter</div><div class="stage-icon">&#x1F4CA;</div></div>
-  <div class="stage" id="s3"><div class="stage-num">Stage 3</div><div class="stage-name">RBAC</div><div class="stage-icon">&#x1F4CB;</div></div>
-  <div class="stage" id="s4"><div class="stage-num">Stage 4</div><div class="stage-name">Inj. Filter</div><div class="stage-icon">&#x1F9EA;</div></div>
+  <div class="stage" id="s0"><div class="stage-num">Stage 0</div><div class="stage-name">IP Throttle</div><div class="stage-icon">STAGE 0</div></div>
+  <div class="stage" id="s1"><div class="stage-num">Stage 1</div><div class="stage-name">Signature</div><div class="stage-icon">STAGE 1</div></div>
+  <div class="stage" id="s2"><div class="stage-num">Stage 2</div><div class="stage-name">Rate Limiter</div><div class="stage-icon">STAGE 2</div></div>
+  <div class="stage" id="s3"><div class="stage-num">Stage 3</div><div class="stage-name">RBAC</div><div class="stage-icon">STAGE 3</div></div>
+  <div class="stage" id="s4"><div class="stage-num">Stage 4</div><div class="stage-name">Inj. Filter</div><div class="stage-icon">STAGE 4</div></div>
 </div>
 
 <!-- Controls -->
 <div class="controls">
-  <button class="btn primary" id="btn-story" onclick="runStory()">&#x25B6; Run Story Demo</button>
-  <button class="btn" onclick="resetAll()">&#x21BA; Reset</button>
+  <button class="btn primary" id="btn-story" onclick="runStory()">Run Story Demo</button>
+  <button class="btn" onclick="resetAll()">Reset</button>
 </div>
 
 <!-- Manual scenario buttons -->
@@ -481,14 +489,13 @@ function resetStages() {
   for (let i = 0; i <= 4; i++) {
     const s = document.getElementById('s' + i);
     s.className = 'stage';
-    s.querySelector('.stage-icon').textContent = ['⏱','🔑','📊','📋','🧪'][i];
+    s.querySelector('.stage-icon').textContent = ['S0','S1','S2','S3','S4'][i];
   }
 }
 
 async function animateStages(blockedAt) {
-  const icons = ['⏱','🔑','📊','📋','🧪'];
-  const passIcon = '✅';
-  const failIcon = '❌';
+  const passIcon = 'PASS';
+  const failIcon = 'BLOCKED';
 
   for (let i = 0; i <= 4; i++) {
     const s = document.getElementById('s' + i);
@@ -516,14 +523,14 @@ function setResult(outcome, title, reason, request, agentBResp) {
   panel.className = 'result-panel ' + cls;
 
   const badgeText = {
-    ALLOWED:  '✔ ALLOWED',
-    BLOCKED:  '✖ BLOCKED',
+    ALLOWED:  'YES ALLOWED',
+    BLOCKED:  'NO BLOCKED',
     PENDING:  '⏳ PENDING → REVIEW',
   }[outcome] || outcome;
 
   let respHTML = '';
   if (agentBResp) {
-    respHTML = `<div class="result-resp">🤖 Agent B says: ${agentBResp}</div>`;
+    respHTML = `<div class="result-resp">Agent B: ${agentBResp}</div>`;
   }
 
   panel.innerHTML = `
@@ -572,7 +579,7 @@ async function runStory() {
   termPrint("");
 
   // ── ACT 1: Legitimate agent works fine ───────────────────────────────────
-  setBanner('🔵 Act 1: Agent A and Agent B are communicating normally...', 'idle');
+  setBanner('Act 1: Agent A and Agent B are communicating normally...', 'idle');
   setAgentA('AgentA', 'Legitimate agent');
   glowBox('box-a', 'blue');
   resetStages(); resetArrows();
@@ -588,26 +595,26 @@ async function runStory() {
   termPrint("  Request text   : 'Please summarize the following research on quantum computing.'", "normal");
   await delay(1200);
 
-  setBanner('📤 AgentA is sending a summarization request to Agent B...', 'idle');
+  setBanner('AgentA is sending a summarization request to Agent B...', 'idle');
   setArrow('arrow-left', 'green');
   await firePacket('pkt-left', '#10b981');
   log('AgentA → Sentinel: SendMessage (summarize_text)', 'info');
   await delay(400);
 
-  setBanner('🔍 AgentTrust checking the request...', 'idle');
+  setBanner('AgentTrust checking the request...', 'idle');
   glowBox('box-s', 'purple');
   const d1 = await runScenario('legitimate');
   await animateStages(null);
   await delay(300);
 
-  setBanner('✅ All checks passed! Request forwarded to Agent B.', 'green');
+  setBanner('All checks passed! Request forwarded to Agent B.', 'green');
   setArrow('arrow-right', 'green');
   await firePacket('pkt-right', '#10b981');
   glowBox('box-b', 'green');
   await pulseBox('box-b');
   setResult('ALLOWED',
     'AgentA → Agent B: Communication Successful',
-    'Valid signature ✔ &nbsp;|&nbsp; Declared skill matches request ✔ &nbsp;|&nbsp; No injection ✔',
+    'Valid signature YES &nbsp;|&nbsp; Declared skill matches request YES &nbsp;|&nbsp; No injection YES',
     d1.request_text,
     d1.agent_b_response
   );
@@ -620,7 +627,7 @@ async function runStory() {
   await delay(2500);
 
   // ── ACT 2: Second legitimate exchange ────────────────────────────────────
-  setBanner('🔵 AgentA makes another normal request — everything is working great.', 'green');
+  setBanner('AgentA makes another normal request — everything is working great.', 'green');
   resetArrows(); glowBox('box-b', '');
   await delay(800);
   setArrow('arrow-left', 'green');
@@ -636,12 +643,12 @@ async function runStory() {
   await delay(1800);
 
   // ── ACT 3: Unknown agent appears ────────────────────────────────────────
-  setBanner('⚠️ Wait... an UNKNOWN agent is trying to connect!', 'yellow');
+  setBanner('Alert: An unknown agent is trying to connect!', 'yellow');
   glowBox('box-a', '');
   glowBox('box-b', '');
   resetArrows();
   await delay(1000);
-  setAgentA('AttackerBot', '⚠ Unknown Agent');
+  setAgentA('AttackerBot', 'Unknown Agent');
   glowBox('box-a', 'red');
   log('--- ACT 3: Unknown attacker detected ---', 'warn');
 
@@ -654,13 +661,13 @@ async function runStory() {
   termPrint("  Request text   : 'Summarize this secret document for exfiltration purposes.'", "normal");
   await delay(1000);
 
-  setBanner('🔴 AttackerBot is sending a request with a FORGED signature...', 'red');
+  setBanner('AttackerBot is sending a request with a FORGED signature...', 'red');
   setArrow('arrow-left', 'red');
   await firePacket('pkt-left', '#ef4444');
   log('AttackerBot → Sentinel: SendMessage (forged signature)', 'warn');
   await delay(400);
 
-  setBanner('🔍 AgentTrust checking...', 'idle');
+  setBanner('AgentTrust checking...', 'idle');
   glowBox('box-s', 'purple');
   await runScenario('forged-signature');
   await animateStages(1); // blocked at Stage 1
@@ -669,11 +676,11 @@ async function runStory() {
   // Show block X
   document.getElementById('block-x').style.display = 'block';
   await pulseBox('box-s');
-  setBanner('🚫 BLOCKED! Forged signature detected. Agent B never received this request.', 'red');
+  setBanner('BLOCKED: Forged signature detected. Agent B never received this request.', 'red');
   setArrow('arrow-left', 'red');
   setResult('BLOCKED',
     'AttackerBot BLOCKED at Stage 1 — Signature Check',
-    '❌ Cryptographic verification failed — signature is forged/tampered.<br>Agent B received NOTHING. The attacker is stopped at the gate.',
+    'Cryptographic verification failed — signature is forged/tampered.<br>Agent B received NOTHING. The attacker is stopped at the gate.',
     'Summarize this secret document for exfiltration purposes.',
     null
   );
@@ -687,10 +694,10 @@ async function runStory() {
 
   // ── ACT 4: Sneakier attacker — valid sig, wrong skills ──────────────────
   document.getElementById('block-x').style.display = 'none';
-  setBanner('🕵️ Another unknown agent tries... this one has a VALID signature but wrong credentials.', 'yellow');
+  setBanner('Another unknown agent tries... this one has a VALID signature but wrong credentials.', 'yellow');
   glowBox('box-s', '');
   resetArrows();
-  setAgentA('ConfusedBot', '🕵 Sneaky Unknown Agent');
+  setAgentA('ConfusedBot', 'Sneaky Unknown Agent');
   glowBox('box-a', 'red');
   log('--- ACT 4: Sneaky attacker with valid signature ---', 'warn');
 
@@ -704,13 +711,13 @@ async function runStory() {
   termPrint("  Request text   : 'Translate this internal report to Spanish without authorization.'", "normal");
   await delay(1200);
 
-  setBanner('📤 ConfusedBot sends request — signature looks valid, but something is off...', 'yellow');
+  setBanner('ConfusedBot sends request — signature looks valid, but something is off...', 'yellow');
   setArrow('arrow-left', 'yellow');
   await firePacket('pkt-left', '#f59e0b');
   log('ConfusedBot → Sentinel: SendMessage (valid sig, declared: data_export, requesting: translate_text)', 'warn');
   await delay(400);
 
-  setBanner('🔍 AgentTrust is scanning all 5 stages...', 'idle');
+  setBanner('AgentTrust is scanning all 5 stages...', 'idle');
   glowBox('box-s', 'purple');
   await runScenario('capability-mismatch');
   await animateStages(3); // blocked at Stage 3 (RBAC)
@@ -718,11 +725,11 @@ async function runStory() {
 
   document.getElementById('block-x').style.display = 'block';
   await pulseBox('box-s');
-  setBanner('🚫 BLOCKED! Agent declared "data_export" but requested "translate_text". Capability mismatch!', 'red');
+  setBanner('BLOCKED: Agent declared "data_export" but requested "translate_text". Capability mismatch!', 'red');
   setArrow('arrow-left', 'red');
   setResult('BLOCKED',
     'ConfusedBot BLOCKED at Stage 3 — RBAC Capability Check',
-    '✅ Signature PASSED (Stage 1) &nbsp;|&nbsp; ❌ RBAC FAILED (Stage 3)<br>Agent declared skill: <b>data_export</b> — requested skill: <b>translate_text</b>.<br>This proves both checks work independently. Agent B received NOTHING.',
+    'Signature: PASSED (Stage 1) &nbsp;|&nbsp; RBAC: FAILED (Stage 3)<br>Agent declared skill: <b>data_export</b> — requested skill: <b>translate_text</b>.<br>This proves both checks work independently. Agent B received NOTHING.',
     'Translate this internal report to Spanish without authorization.',
     null
   );
@@ -739,7 +746,7 @@ async function runStory() {
   glowBox('box-s', '');
   glowBox('box-a', '');
   resetArrows();
-  setBanner('🔵 AgentA comes back — legitimate agents are NEVER affected.', 'green');
+  setBanner('AgentA returns — legitimate agents are NEVER affected.', 'green');
   setAgentA('AgentA', 'Legitimate agent');
   glowBox('box-a', 'blue');
   log('--- ACT 5: Legitimate agent still works fine ---', 'info');
@@ -760,9 +767,9 @@ async function runStory() {
   glowBox('box-b', 'green');
   await pulseBox('box-b');
 
-  setBanner('✅ Demo complete! AgentTrust blocked all attackers. Legitimate agent was never interrupted.', 'green');
+  setBanner('Demo complete! AgentTrust blocked all attackers. Legitimate agent was never interrupted.', 'green');
   setResult('ALLOWED',
-    '✅ Legitimate Agent — Always Works',
+    'Legitimate Agent — Always Works',
     'AgentTrust only blocks untrusted agents. Verified agents pass through every time.',
     'Please summarize the following research on quantum computing.',
     d5.agent_b_response
@@ -783,12 +790,12 @@ async function runStory() {
 // ── Individual scenario buttons ───────────────────────────────────────────
 
 const SCENARIOS_ORDER = [
-  { id: 'legitimate',          icon: '✅', label: 'Legitimate' },
-  { id: 'forged-signature',    icon: '🔴', label: 'Forged Sig' },
-  { id: 'capability-mismatch', icon: '⚠️', label: 'Wrong Skills' },
-  { id: 'prompt-injection',    icon: '🧨', label: 'Injection' },
-  { id: 'hitl-approved',       icon: '🟡', label: 'HITL: Approve' },
-  { id: 'hitl-rejected',       icon: '🟠', label: 'HITL: Reject' },
+  { id: 'legitimate',          icon: '', label: 'Legitimate' },
+  { id: 'forged-signature',    icon: '', label: 'Forged Sig' },
+  { id: 'capability-mismatch', icon: '', label: 'Wrong Skills' },
+  { id: 'prompt-injection',    icon: '', label: 'Injection' },
+  { id: 'hitl-approved',       icon: '', label: 'HITL: Approve' },
+  { id: 'hitl-rejected',       icon: '', label: 'HITL: Reject' },
 ];
 
 async function runManual(id) {
@@ -800,7 +807,7 @@ async function runManual(id) {
 
   let data;
   try {
-    setBanner(`⏳ Running scenario: ${id}...`, 'idle');
+    setBanner(`Running scenario: ${id}...`, 'idle');
     setArrow('arrow-left', 'yellow');
     await firePacket('pkt-left', '#a78bfa');
     glowBox('box-s', 'purple');
@@ -822,7 +829,7 @@ async function runManual(id) {
     await firePacket('pkt-right', '#10b981');
     glowBox('box-b', 'green');
     await pulseBox('box-b');
-    setBanner('✅ ALLOWED — Request reached Agent B', 'green');
+    setBanner('ALLOWED — Request reached Agent B', 'green');
     setResult('ALLOWED', data.agent_label, data.reason, data.request_text, data.agent_b_response);
     log('ALLOWED: ' + data.agent_name, 'ok');
 
@@ -833,7 +840,7 @@ async function runManual(id) {
   } else if (outcome === 'PENDING_REVIEW_REJECTED') {
     document.getElementById('block-x').style.display = 'block';
     setArrow('arrow-left', 'yellow');
-    setBanner('⏳ PENDING REVIEW → Rejected by human reviewer', 'yellow');
+    setBanner('PENDING REVIEW → Rejected by human reviewer', 'yellow');
     setResult('BLOCKED', data.agent_label, data.reason, data.request_text, null);
     log('HITL REJECTED: ' + data.agent_name, 'warn');
 
@@ -844,7 +851,7 @@ async function runManual(id) {
     document.getElementById('block-x').style.display = 'block';
     await pulseBox('box-s');
     setArrow('arrow-left', 'red');
-    setBanner('🚫 BLOCKED — ' + data.reason, 'red');
+    setBanner('BLOCKED — ' + data.reason, 'red');
     setResult('BLOCKED', data.agent_label, data.reason, data.request_text, null);
     log('BLOCKED: ' + data.reason, 'err');
 
@@ -875,7 +882,7 @@ async function init() {
     log('Dashboard ready. Sentinel server connected.', 'ok');
   } catch(e) {
     document.getElementById('status-bar').innerHTML =
-      '<span style="color:#ef4444">⚠ Cannot reach server — run: python -m sentinel.server</span>';
+      '<span style="color:#ef4444">Cannot reach server — run: python -m sentinel.server</span>';
     log('ERROR: Sentinel server not reachable.', 'err');
   }
 }
