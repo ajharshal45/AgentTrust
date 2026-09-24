@@ -1,4 +1,4 @@
-# Project: A2ASentinel
+# Project: AgentTrust
 
 ## What this is
 A college mid-semester project MVP demonstrating a runtime trust verification
@@ -10,13 +10,13 @@ review panel in about a week.
 ## The problem being demonstrated
 A2A's signed Agent Cards prove who issued a card, once, at the start. They
 do not verify that an agent's ongoing behavior matches what it declared.
-A2ASentinel sits between agents and checks both identity (signature) and
+AgentTrust sits between agents and checks both identity (signature) and
 behavior (declared vs. requested capability) on every request, not just once.
 
 ## Scope for THIS build (MVP only)
 Build only:
 1. Two A2A agents that can talk to each other via the real `a2a-sdk`.
-2. An interceptor layer ("A2ASentinel") sitting between them.
+2. An interceptor layer ("AgentTrust") sitting between them.
 3. Signature verification check.
 4. A simple, rule-based capability-match check (declared skills vs.
    requested task) — NOT machine learning yet.

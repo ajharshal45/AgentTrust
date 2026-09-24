@@ -36,7 +36,7 @@ def create_app() -> FastAPI:
     """Build and return the fully-wired FastAPI application for Agent B."""
 
     app = FastAPI(
-        title="Agent B — A2ASentinel Demo",
+        title="Agent B — AgentTrust Demo",
         description="Task-executing A2A agent with summarize_text and translate_text skills.",
         version="1.0.0",
     )

@@ -1,4 +1,4 @@
-"""Human-in-the-loop CLI reviewer for A2ASentinel.
+"""Human-in-the-loop CLI reviewer for AgentTrust.
 
 Usage:
     python -m sentinel.review               (lists pending review items)
@@ -14,7 +14,7 @@ from sentinel import alert_queue
 def print_alerts(status: str = "pending") -> None:
     alerts = alert_queue.list_alerts(status_filter=status)
     print("=" * 65)
-    print(f"  A2ASentinel Human Review Queue [{status.upper()}]")
+    print(f"  AgentTrust Human Review Queue [{status.upper()}]")
     print("=" * 65)
     if not alerts:
         print(f"  No {status} alerts in queue.")

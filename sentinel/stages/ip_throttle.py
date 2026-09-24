@@ -1,4 +1,4 @@
-"""Identity-agnostic IP throttling stage for A2ASentinel."""
+"""Identity-agnostic IP throttling stage for AgentTrust."""
 
 import time
 

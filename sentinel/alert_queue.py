@@ -1,4 +1,4 @@
-"""Human-in-the-loop alert queue for A2ASentinel."""
+"""Human-in-the-loop alert queue for AgentTrust."""
 
 from datetime import datetime, timezone
 import json

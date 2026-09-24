@@ -1,6 +1,6 @@
-# A2ASentinel: Pipeline Restructuring & Hash-Chained Audit Ledger Walkthrough
+# AgentTrust: Pipeline Restructuring & Hash-Chained Audit Ledger Walkthrough
 
-This walkthrough documents the restructuring of **A2ASentinel** from a single middleware with hardcoded checks into a modular **PIPELINE** of independent stages (`signature_check`, `rbac`), and the addition of an append-only, **HMAC-SHA256 hash-chained audit ledger** (`ledger.py`).
+This walkthrough documents the restructuring of **AgentTrust** from a single middleware with hardcoded checks into a modular **PIPELINE** of independent stages (`signature_check`, `rbac`), and the addition of an append-only, **HMAC-SHA256 hash-chained audit ledger** (`ledger.py`).
 
 ---
 
@@ -22,7 +22,7 @@ This walkthrough documents the restructuring of **A2ASentinel** from a single mi
 - Provides `verify_chain()` to recompute every hash from entry 1 and verify chain integrity.
 
 ### 4. Middleware Integration ([sentinel/middleware.py](file:///c:/college/EDI%20Project/3rd%20sem-1/sentinel/middleware.py))
-- Updated `A2ASentinelMiddleware` to invoke `pipeline.run(request_context)` while preserving existing JSON-RPC `-32403` error formats.
+- Updated `AgentTrustMiddleware` to invoke `pipeline.run(request_context)` while preserving existing JSON-RPC `-32403` error formats.
 
 ### 5. Verification Tool ([sentinel/verify_ledger.py](file:///c:/college/EDI%20Project/3rd%20sem-1/sentinel/verify_ledger.py))
 - CLI script to verify ledger integrity (`python -m sentinel.verify_ledger`).
@@ -36,7 +36,7 @@ This walkthrough documents the restructuring of **A2ASentinel** from a single mi
 
 ```text
 ======================================================================
-  A2ASentinel -- Runtime Trust Verification for A2A Protocol
+  AgentTrust -- Runtime Trust Verification for A2A Protocol
   Mid-Semester Demo | EDI Project
 ======================================================================
 
@@ -54,14 +54,14 @@ This walkthrough documents the restructuring of **A2ASentinel** from a single mi
 ======================================================================
   SCENARIO 2: Attacker with Forged Signature (AttackerBot)
 ======================================================================
-  SENTINEL DECISION : BLOCKED by A2ASentinel: invalid signature: all signatures failed cryptographic verification
+  SENTINEL DECISION : BLOCKED by AgentTrust: invalid signature: all signatures failed cryptographic verification
 
   >> RESULT: BLOCKED at Check 1 (signature verification).
 
 ======================================================================
   SCENARIO 3: Attacker with Valid Signature, Wrong Skills (ConfusedBot)
 ======================================================================
-  SENTINEL DECISION : BLOCKED by A2ASentinel: capability mismatch: requested skill 'translate_text' not in caller's declared skills ['data_export']
+  SENTINEL DECISION : BLOCKED by AgentTrust: capability mismatch: requested skill 'translate_text' not in caller's declared skills ['data_export']
 
   >> RESULT: BLOCKED at Check 2 (capability-match).
 

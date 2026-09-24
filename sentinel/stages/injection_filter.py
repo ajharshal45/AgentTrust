@@ -1,4 +1,4 @@
-"""Prompt Injection Filter pipeline stage for A2ASentinel."""
+"""Prompt Injection Filter pipeline stage for AgentTrust."""
 
 import re
 

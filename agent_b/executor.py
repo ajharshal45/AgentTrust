@@ -2,7 +2,7 @@
 
 This is a demo executor that returns canned responses confirming which
 task type it executed. No real AI/NLP logic — the point of this project
-is the trust/security layer (A2ASentinel), not agent intelligence.
+is the trust/security layer (AgentTrust), not agent intelligence.
 
 SDK contract (from agent_executor.py source):
   - AgentExecutor has two abstract methods: execute() and cancel()

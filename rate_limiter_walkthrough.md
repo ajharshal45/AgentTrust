@@ -1,4 +1,4 @@
-# A2ASentinel: Rate Limiter & Cycle Overflow Mitigation Walkthrough
+# AgentTrust: Rate Limiter & Cycle Overflow Mitigation Walkthrough
 
 This walkthrough documents the implementation of the **Rate Limiter & Cycle Overflow Mitigation Stage** ([`sentinel/stages/rate_limiter.py`](file:///c:/college/EDI%20Project/3rd%20sem-1/sentinel/stages/rate_limiter.py)) to defend against flooding and recursive delegation/loop attacks from the A2ASecBench attack categories.
 
@@ -6,7 +6,7 @@ This walkthrough documents the implementation of the **Rate Limiter & Cycle Over
 
 ## 1. Architectural Design & Pipeline Stage Order
 
-Rate limiting is registered **FIRST** (Stage 0) in the **A2ASentinel** pipeline before signature verification or RBAC checks. This ensures flooding requests are dropped cheaply before spending CPU time on cryptographic JWS signature validation or payload decoding.
+Rate limiting is registered **FIRST** (Stage 0) in the **AgentTrust** pipeline before signature verification or RBAC checks. This ensures flooding requests are dropped cheaply before spending CPU time on cryptographic JWS signature validation or payload decoding.
 
 ```text
                          ┌─────────────────────────────────────┐
@@ -79,13 +79,13 @@ FLOOD TEST: Rapid-Fire Requests (10 Requests in Loop)
   Request # 1 -> ALLOWED (Agent B executed summarize_text)
   Request # 2 -> ALLOWED (Agent B executed summarize_text)
   Request # 3 -> ALLOWED (Agent B executed summarize_text)
-  Request # 4 -> BLOCKED (Reason: BLOCKED by A2ASentinel: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
-  Request # 5 -> BLOCKED (Reason: BLOCKED by A2ASentinel: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
-  Request # 6 -> BLOCKED (Reason: BLOCKED by A2ASentinel: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
-  Request # 7 -> BLOCKED (Reason: BLOCKED by A2ASentinel: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
-  Request # 8 -> BLOCKED (Reason: BLOCKED by A2ASentinel: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
-  Request # 9 -> BLOCKED (Reason: BLOCKED by A2ASentinel: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
-  Request #10 -> BLOCKED (Reason: BLOCKED by A2ASentinel: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
+  Request # 4 -> BLOCKED (Reason: BLOCKED by AgentTrust: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
+  Request # 5 -> BLOCKED (Reason: BLOCKED by AgentTrust: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
+  Request # 6 -> BLOCKED (Reason: BLOCKED by AgentTrust: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
+  Request # 7 -> BLOCKED (Reason: BLOCKED by AgentTrust: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
+  Request # 8 -> BLOCKED (Reason: BLOCKED by AgentTrust: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
+  Request # 9 -> BLOCKED (Reason: BLOCKED by AgentTrust: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
+  Request #10 -> BLOCKED (Reason: BLOCKED by AgentTrust: cycle overflow detected: agent 'AgentA' repeated task 'summarize_text' 4 times in 5s)
 
 =================================================================
 FLOOD TEST RESULTS: 3 ALLOWED, 7 BLOCKED

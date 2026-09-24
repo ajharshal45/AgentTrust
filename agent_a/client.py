@@ -67,7 +67,7 @@ def send_request(
                 "messageId": str(uuid.uuid4()),
             },
             # Attach the caller's agent card as metadata so that an
-            # interceptor (A2ASentinel) can inspect it. The A2A protocol
+            # interceptor (AgentTrust) can inspect it. The A2A protocol
             # doesn't have a built-in "attach caller card" field in
             # SendMessageRequest, so we use the metadata extension point.
             "metadata": {

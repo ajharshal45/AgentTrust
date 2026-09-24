@@ -1,4 +1,4 @@
-"""A2ASentinel security checks.
+"""AgentTrust security checks.
 
 Two checks, run in order, short-circuiting on first failure:
   1. Signature check — verify the caller's AgentCard JWS signature

@@ -1,7 +1,7 @@
-"""A2ASentinel Web Dashboard — Visual Demo Server
+"""AgentTrust Web Dashboard — Visual Demo Server
 
 Serves a web dashboard on port 8080 that visually simulates
-requests flowing between Agent A -> A2ASentinel -> Agent B.
+requests flowing between Agent A -> AgentTrust -> Agent B.
 
 Run alongside the sentinel server:
   Terminal 1: python -m sentinel.server        (port 8001)
@@ -26,7 +26,7 @@ from agent_a.card import (
 )
 from agent_a.client import AGENT_B_JSONRPC_URL, send_request, extract_response_text
 
-app = FastAPI(title="A2ASentinel Dashboard")
+app = FastAPI(title="AgentTrust Dashboard")
 
 SCENARIOS = {
     "legitimate": {
@@ -125,19 +125,22 @@ async def run_scenario(scenario_id: str):
         msg = response.get("error", {}).get("message", "Unknown error")
         agent_b_response = None
 
+        # Clean error prefix
+        clean_msg = msg.replace("BLOCKED by AgentTrust: ", "").replace("BLOCKED by A2ASentinel: ", "")
+
         # Determine which stage blocked it
         if "invalid signature" in msg or "no signatures" in msg:
             outcome = "BLOCKED"
             blocked_at_stage = 1
-            reason = f"Stage 1 (Signature Check): {msg.replace('BLOCKED by A2ASentinel: ', '')}"
+            reason = f"Stage 1 (Signature Check): {clean_msg}"
         elif "capability mismatch" in msg and "human reviewer" not in msg:
             outcome = "BLOCKED"
             blocked_at_stage = 3
-            reason = f"Stage 3 (RBAC): {msg.replace('BLOCKED by A2ASentinel: ', '')}"
+            reason = f"Stage 3 (RBAC): {clean_msg}"
         elif "injection" in msg:
             outcome = "BLOCKED"
             blocked_at_stage = 4
-            reason = f"Stage 4 (Injection Filter): {msg.replace('BLOCKED by A2ASentinel: ', '')}"
+            reason = f"Stage 4 (Injection Filter): {clean_msg}"
         elif "human reviewer rejected" in msg:
             outcome = "BLOCKED"
             blocked_at_stage = 3
@@ -145,11 +148,11 @@ async def run_scenario(scenario_id: str):
         elif "cycle overflow" in msg or "rate" in msg or "throttle" in msg:
             outcome = "BLOCKED"
             blocked_at_stage = 2
-            reason = f"Stage 2 (Rate Limiter): {msg.replace('BLOCKED by A2ASentinel: ', '')}"
+            reason = f"Stage 2 (Rate Limiter): {clean_msg}"
         else:
             outcome = "BLOCKED"
             blocked_at_stage = None
-            reason = msg.replace("BLOCKED by A2ASentinel: ", "")
+            reason = clean_msg
 
         # Check HITL
         if s["expected"] == "PENDING_REVIEW":

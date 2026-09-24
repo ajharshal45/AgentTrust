@@ -1,4 +1,4 @@
-# Requirements: A2ASentinel MVP
+# Requirements: AgentTrust MVP
 
 ## Environment
 - Python 3.12
@@ -28,7 +28,7 @@
     skills — needs to support both attack modes if feasible, or pick
     the simpler one first and note the other as a fast follow-up.
 
-### 3. A2ASentinel — the interceptor
+### 3. AgentTrust — the interceptor
 - Sits between Agent A and Agent B — do not modify Agent B's own logic
   to do these checks; the checks belong in a separate, clearly isolated
   layer, since the whole point is that the security layer is independent
@@ -52,9 +52,9 @@
      against the AgentCard's declared `skills` list. If the request
      doesn't correspond to a declared skill, this fails.
 - Output: for every request, print a clear line:
-  `[A2ASentinel] <agent_name> -> <requested_task>: ALLOWED`
+  `[AgentTrust] <agent_name> -> <requested_task>: ALLOWED`
   or
-  `[A2ASentinel] <agent_name> -> <requested_task>: BLOCKED (reason: ...)`
+  `[AgentTrust] <agent_name> -> <requested_task>: BLOCKED (reason: ...)`
 
 ### 4. Demo runner
 - One script (or a couple of clearly labeled scripts) that can run both

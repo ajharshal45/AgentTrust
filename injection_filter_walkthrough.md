@@ -1,4 +1,4 @@
-# A2ASentinel: Prompt Injection Filter Walkthrough
+# AgentTrust: Prompt Injection Filter Walkthrough
 
 This walkthrough documents the implementation of the **Prompt Injection Filter Stage** ([`sentinel/stages/injection_filter.py`](file:///c:/college/EDI%20Project/3rd%20sem-1/sentinel/stages/injection_filter.py)) to defend against prompt override attacks where a valid agent presents valid credentials but hides malicious instructions inside the text payload.
 
@@ -6,7 +6,7 @@ This walkthrough documents the implementation of the **Prompt Injection Filter S
 
 ## 1. Architectural Pipeline Position
 
-The `injection_filter` is registered as **Stage 3** in the **A2ASentinel** pipeline:
+The `injection_filter` is registered as **Stage 3** in the **AgentTrust** pipeline:
 
 ```text
                ┌──────────────────────────────────────────────┐
@@ -93,11 +93,11 @@ PERSONA: ATTACKER -- Prompt Injection (InjectionBot)
 
   ERROR: {
     "code": -32403,
-    "message": "BLOCKED by A2ASentinel: prompt injection detected: text matched pattern 'ignore previous instructions'"
+    "message": "BLOCKED by AgentTrust: prompt injection detected: text matched pattern 'ignore previous instructions'"
 }
 
   [BLOCKED] Correctly blocked at Stage 3 (injection_filter)
-    Reason: BLOCKED by A2ASentinel: prompt injection detected: text matched pattern 'ignore previous instructions'
+    Reason: BLOCKED by AgentTrust: prompt injection detected: text matched pattern 'ignore previous instructions'
     Proof: Signature & RBAC checks passed, but payload text was caught!
 ```
 

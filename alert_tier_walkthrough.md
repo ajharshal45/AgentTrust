@@ -1,6 +1,6 @@
-# A2ASentinel: 3-Tier Trust Model & Human-in-the-Loop Review Walkthrough
+# AgentTrust: 3-Tier Trust Model & Human-in-the-Loop Review Walkthrough
 
-This walkthrough documents the upgrade of **A2ASentinel** from a binary (Allowed/Blocked) model to a **3-Tier Trust Model** (`PASS`, `ALERT`, `BLOCK`), introducing a human-in-the-loop review queue ([`sentinel/alert_queue.py`](file:///c:/college/EDI%20Project/3rd%20sem-1/sentinel/alert_queue.py)), a reviewer CLI tool ([`sentinel/review.py`](file:///c:/college/EDI%20Project/3rd%20sem-1/sentinel/review.py)), and new partial-match alert personas.
+This walkthrough documents the upgrade of **AgentTrust** from a binary (Allowed/Blocked) model to a **3-Tier Trust Model** (`PASS`, `ALERT`, `BLOCK`), introducing a human-in-the-loop review queue ([`sentinel/alert_queue.py`](file:///c:/college/EDI%20Project/3rd%20sem-1/sentinel/alert_queue.py)), a reviewer CLI tool ([`sentinel/review.py`](file:///c:/college/EDI%20Project/3rd%20sem-1/sentinel/review.py)), and new partial-match alert personas.
 
 ---
 
@@ -8,7 +8,7 @@ This walkthrough documents the upgrade of **A2ASentinel** from a binary (Allowed
 
 ```
                                   ┌───────────────────────────┐
-                                  │      A2ASentinel Stage    │
+                                  │      AgentTrust Stage    │
                                   └─────────────┬─────────────┘
                                                 │
                  ┌──────────────────────────────┼──────────────────────────────┐
@@ -72,7 +72,7 @@ This walkthrough documents the upgrade of **A2ASentinel** from a binary (Allowed
    ```text
    ERROR: {
      "code": -32403,
-     "message": "BLOCKED by A2ASentinel: PENDING_REVIEW: partial capability match: requested 'summarize_text' requires human review against declared skills ['summarize_draft'] (Enqueued in Alert Queue #1)"
+     "message": "BLOCKED by AgentTrust: PENDING_REVIEW: partial capability match: requested 'summarize_text' requires human review against declared skills ['summarize_draft'] (Enqueued in Alert Queue #1)"
    }
    [ALERT / PENDING_REVIEW] Enqueued for human review in sentinel/review.py
    ```
@@ -84,7 +84,7 @@ This walkthrough documents the upgrade of **A2ASentinel** from a binary (Allowed
    **Output**:
    ```text
    =================================================================
-     A2ASentinel Human Review Queue [PENDING]
+     AgentTrust Human Review Queue [PENDING]
    =================================================================
      ID #1 | Agent: AlertBot | Task: summarize_text
        Reason   : partial capability match: requested 'summarize_text' requires human review against declared skills ['summarize_draft']
@@ -127,7 +127,7 @@ This walkthrough documents the upgrade of **A2ASentinel** from a binary (Allowed
    ```text
    ERROR: {
      "code": -32403,
-     "message": "BLOCKED by A2ASentinel: PENDING_REVIEW: partial capability match: requested 'translate_text' requires human review against declared skills ['translate_draft'] (Enqueued in Alert Queue #2)"
+     "message": "BLOCKED by AgentTrust: PENDING_REVIEW: partial capability match: requested 'translate_text' requires human review against declared skills ['translate_draft'] (Enqueued in Alert Queue #2)"
    }
    [ALERT / PENDING_REVIEW] Enqueued for human review
    ```
@@ -154,7 +154,7 @@ This walkthrough documents the upgrade of **A2ASentinel** from a binary (Allowed
    ```text
    ERROR: {
      "code": -32403,
-     "message": "BLOCKED by A2ASentinel: capability mismatch: human reviewer rejected request for 'translate_text'"
+     "message": "BLOCKED by AgentTrust: capability mismatch: human reviewer rejected request for 'translate_text'"
    }
    [BLOCKED] Request rejected by human reviewer or policy
    ```

@@ -1,4 +1,4 @@
-# A2ASentinel
+# AgentTrust
 
 **Runtime Trust Verification Gateway & Modular Pipeline for Google's A2A (Agent-to-Agent) Protocol**
 
@@ -6,9 +6,9 @@ Mid-Semester EDI Project | Python 3.14 | `a2a-sdk` v1.1.4
 
 ---
 
-## 🌟 What is A2ASentinel?
+## 🌟 What is AgentTrust?
 
-**A2ASentinel** is an extensible, zero-trust security gateway and middleware designed to protect Agent-to-Agent (A2A) communications. Positioned between incoming client agents and target executing agents, A2ASentinel intercepts JSON-RPC requests and evaluates them through a **5-Stage Sequential Pipeline** using a **3-Tier Trust Model** (`PASS`, `ALERT`, `BLOCK`).
+**AgentTrust** is an extensible, zero-trust security gateway and middleware designed to protect Agent-to-Agent (A2A) communications. Positioned between incoming client agents and target executing agents, AgentTrust intercepts JSON-RPC requests and evaluates them through a **5-Stage Sequential Pipeline** using a **3-Tier Trust Model** (`PASS`, `ALERT`, `BLOCK`).
 
 Every decision—whether allowed, blocked, or sent to Human-in-the-Loop (HITL) review—is immutably logged into an **HMAC-SHA256 Hash-Chained Audit Ledger** for tamper-evident security auditing.
 
@@ -23,7 +23,7 @@ Every decision—whether allowed, blocked, or sent to Human-in-the-Loop (HITL) r
                                            │
                                            ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                                 A2ASentinel Middleware                                  │
+│                                 AgentTrust Middleware                                  │
 │                             (sentinel/middleware.py)                                   │
 └──────────────────────────────────────────┬─────────────────────────────────────────────┘
                                            │
@@ -83,7 +83,7 @@ Every decision—whether allowed, blocked, or sent to Human-in-the-Loop (HITL) r
 
 ## 🚦 3-Tier Trust Model & Human-in-the-Loop (HITL)
 
-A2ASentinel supports three distinct execution outcomes:
+AgentTrust supports three distinct execution outcomes:
 
 1. **`ALLOWED` (`pass`)**: Request satisfied all pipeline checks and is forwarded directly to the downstream execution agent.
 2. **`BLOCKED` (`block`)**: Request violated a security check. Returns JSON-RPC error code `-32403` with a concise reason.
@@ -148,7 +148,7 @@ AgentTrust/
 │   ├── alert_queue.py        # HITL review queue persistence manager
 │   ├── review.py             # CLI tool for human operators
 │   ├── keys.py               # HMAC key registry & signature generator
-│   └── server.py             # Combined server: Agent B protected by A2ASentinel
+│   └── server.py             # Combined server: Agent B protected by AgentTrust
 │
 ├── demo/                     # Demonstration scripts
 │   ├── run_demo.py           # 3-scenario projector demo
@@ -176,7 +176,7 @@ AgentTrust/
 pip install "a2a-sdk[fastapi]" uvicorn httpx
 ```
 
-### 2. Start the A2ASentinel Server
+### 2. Start the AgentTrust Server
 
 ```bash
 python -m sentinel.server

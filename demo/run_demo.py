@@ -1,4 +1,4 @@
-"""A2ASentinel Full Demo Runner — Mid-Semester Review
+"""AgentTrust Full Demo Runner — Mid-Semester Review
 
 Runs 5 clear scenarios covering the full 5-stage pipeline:
 
@@ -305,7 +305,7 @@ def bonus_rate_limit() -> None:
 def main() -> None:
     print(BLANK)
     print(WIDE)
-    print("  A2ASentinel -- Runtime Trust Verification for Google A2A Protocol")
+    print("  AgentTrust -- Runtime Trust Verification for Google A2A Protocol")
     print("  EDI Mid-Semester Review Demo")
     print(WIDE)
 
@@ -345,7 +345,7 @@ def main() -> None:
     info(f"  {'5a. AlertBot (HITL approved)':<40} {'Stage 3: alert':<25} PENDING -> ALLOWED")
     info(f"  {'5b. RiskyBot (HITL rejected)':<40} {'Stage 3: alert':<25} PENDING -> BLOCKED")
     print(BLANK)
-    info("A2ASentinel enforces a 5-stage modular pipeline. Every request")
+    info("AgentTrust enforces a 5-stage modular pipeline. Every request")
     info("must pass ALL stages to reach Agent B. Blocked/alerted requests")
     info("are logged in the cryptographic audit ledger (audit_ledger.jsonl).")
     print(BLANK)

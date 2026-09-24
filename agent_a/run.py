@@ -357,8 +357,8 @@ def main():
     persona = sys.argv[1]
 
     print()
-    print("Agent A -- A2ASentinel Demo Client")
-    print("Make sure Agent B is running: python -m agent_b.server")
+    print("Agent A -- AgentTrust Demo Client")
+    print("Make sure Agent B is running: python -m sentinel.server")
     print()
 
     import httpx

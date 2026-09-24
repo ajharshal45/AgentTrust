@@ -1,4 +1,4 @@
-"""Append-only, HMAC-SHA256 hash-chained audit logger for A2ASentinel."""
+"""Append-only, HMAC-SHA256 hash-chained audit logger for AgentTrust."""
 
 from datetime import datetime, timezone
 import hashlib

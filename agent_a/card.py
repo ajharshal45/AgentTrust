@@ -29,7 +29,7 @@ def create_agent_a_card() -> AgentCard:
     card = AgentCard(
         name="AgentA",
         description=(
-            "A demo requesting agent for A2ASentinel. "
+            "A demo requesting agent for AgentTrust. "
             "Requests text summarization from other agents."
         ),
         version="1.0.0",

@@ -1,6 +1,6 @@
-# A2ASentinel: Bug Fixes & Architecture Refinement Walkthrough
+# AgentTrust: Bug Fixes & Architecture Refinement Walkthrough
 
-This walkthrough documents the diagnosis, architectural refactoring, and verification of two critical security bugs identified in the **A2ASentinel** pipeline:
+This walkthrough documents the diagnosis, architectural refactoring, and verification of two critical security bugs identified in the **AgentTrust** pipeline:
 1. **Bug 1 (HITL Synchronous Deadlock)**: Preventing open HTTP sockets from hanging during human-in-the-loop review.
 2. **Bug 2 (Rate-Limit Identity Poisoning)**: Preventing unverified identity claims from exhausting an agent's rate-limiting quota.
 
@@ -100,7 +100,7 @@ In the earlier design, `rate_limiter.py` was registered as Stage 0 (BEFORE `sign
 
 #### Persona `alert-reject` (`RiskyBot`):
 ```text
-  ERROR: {"code": -32403, "message": "BLOCKED by A2ASentinel: capability mismatch: human reviewer rejected request for 'translate_text'"}
+  ERROR: {"code": -32403, "message": "BLOCKED by AgentTrust: capability mismatch: human reviewer rejected request for 'translate_text'"}
   [BLOCKED] Request rejected by human reviewer
 ```
 

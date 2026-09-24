@@ -14,7 +14,7 @@ from sentinel.pipeline import Pipeline
 logger = logging.getLogger(__name__)
 
 # ANSI-free log prefix for clear demo output
-LOG_PREFIX = "[A2ASentinel]"
+LOG_PREFIX = "[AgentTrust]"
 
 
 class A2ASentinelMiddleware(BaseHTTPMiddleware):
@@ -156,9 +156,12 @@ class A2ASentinelMiddleware(BaseHTTPMiddleware):
                 "jsonrpc": "2.0",
                 "error": {
                     "code": -32403,
-                    "message": f"BLOCKED by A2ASentinel: {reason}",
+                    "message": f"BLOCKED by AgentTrust: {reason}",
                 },
                 "id": request_id,
             },
             status_code=200,
         )
+
+
+AgentTrustMiddleware = A2ASentinelMiddleware

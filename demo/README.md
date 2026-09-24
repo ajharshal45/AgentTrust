@@ -1,8 +1,8 @@
-# A2ASentinel Demo
+# AgentTrust Demo
 
 ## What this demonstrates
 
-A2ASentinel is a runtime trust verification layer for Google's A2A (Agent-to-Agent)
+AgentTrust is a runtime trust verification layer for Google's A2A (Agent-to-Agent)
 protocol. It sits as FastAPI middleware in front of a target agent (Agent B) and
 enforces two independent security checks on every incoming request:
 

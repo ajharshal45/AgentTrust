@@ -1,4 +1,4 @@
-"""Pipeline executor for A2ASentinel security stages with 3-tier verdicts and HITL simulation mode support."""
+"""Pipeline executor for AgentTrust security stages with 3-tier verdicts and HITL simulation mode support."""
 
 from dataclasses import dataclass
 import os

@@ -1,1 +1,1 @@
-# Demo runner for A2ASentinel mid-semester project
+# Demo runner for AgentTrust mid-semester project

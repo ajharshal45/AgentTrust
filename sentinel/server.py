@@ -1,7 +1,7 @@
-"""Protected Agent B server — Agent B + A2ASentinel middleware.
+"""Protected Agent B server — Agent B + AgentTrust middleware.
 
 This is a wrapper that imports Agent B's existing create_app() and
-adds the A2ASentinel middleware in front of it. Agent B's own code
+adds the AgentTrust middleware in front of it. Agent B's own code
 (agent_b/) is completely unmodified.
 
 Run with:  python -m sentinel.server
@@ -27,16 +27,16 @@ logger = logging.getLogger(__name__)
 
 
 def create_protected_app():
-    """Create Agent B's FastAPI app with A2ASentinel middleware in front."""
+    """Create Agent B's FastAPI app with AgentTrust middleware in front."""
 
     # 1. Create the standard Agent B app (same as agent_b/server.py)
     app = create_app()
 
-    # 2. Add A2ASentinel middleware — this runs BEFORE Agent B's routes
+    # 2. Add AgentTrust middleware — this runs BEFORE Agent B's routes
     #    see any request. Blocked requests never reach Agent B.
     app.add_middleware(A2ASentinelMiddleware)
 
-    logger.info("A2ASentinel middleware enabled — protecting Agent B")
+    logger.info("AgentTrust middleware enabled — protecting Agent B")
     return app
 
 
@@ -46,7 +46,7 @@ app = create_protected_app()
 
 if __name__ == "__main__":
     logger.info(
-        "Starting PROTECTED Agent B (with A2ASentinel) on %s:%d",
+        "Starting PROTECTED Agent B (with AgentTrust) on %s:%d",
         AGENT_B_HOST,
         AGENT_B_PORT,
     )

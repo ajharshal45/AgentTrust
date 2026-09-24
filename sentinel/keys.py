@@ -1,4 +1,4 @@
-"""Demo cryptographic keys and signing/verification for A2ASentinel.
+"""Demo cryptographic keys and signing/verification for AgentTrust.
 
 Uses HMAC-SHA256 as a simplified JWS scheme for the demo. This is real
 cryptographic verification (not a string comparison) — the only

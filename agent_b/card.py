@@ -31,7 +31,7 @@ def create_agent_b_card() -> AgentCard:
     return AgentCard(
         name="AgentB",
         description=(
-            "A demo task-executing agent for A2ASentinel. "
+            "A demo task-executing agent for AgentTrust. "
             "Supports text summarization and translation (canned responses)."
         ),
         version="1.0.0",

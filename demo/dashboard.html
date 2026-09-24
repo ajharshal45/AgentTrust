@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>A2ASentinel — Security Demo</title>
+<title>AgentTrust — Security Demo</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -299,7 +299,7 @@
 <body>
 
 <header>
-  <h1>&#x1F6E1; A2ASentinel</h1>
+  <h1>&#x1F6E1; AgentTrust</h1>
   <p>Runtime Trust Verification for Google's A2A Protocol &mdash; EDI Mid-Semester Demo</p>
 </header>
 
@@ -330,7 +330,7 @@
       <div id="block-x">&#x1F6AB;</div>
     </div>
     <div class="role">Security Gateway</div>
-    <div class="name">A2ASentinel</div>
+    <div class="name">AgentTrust</div>
     <div class="sub">5-Stage Pipeline</div>
   </div>
 
@@ -385,7 +385,7 @@
     <button class="clear-btn" onclick="termClear()">Clear</button>
   </div>
   <div class="terminal-body" id="term-body">
-    <span class="term-line green">$ A2ASentinel Live Execution Terminal initialized.</span>
+    <span class="term-line green">$ AgentTrust Live Execution Terminal initialized.</span>
     <span class="term-line dim">========================================================================</span>
     <span class="term-line normal">Visual dashboard & terminal are synchronized in real time.</span>
     <span class="term-line normal">Click &quot;▶ Run Story Demo&quot; to see both visual animation &amp; console logs!</span>
@@ -424,7 +424,7 @@ function termPrint(text, cls = 'normal') {
 function termClear() {
   const b = document.getElementById('term-body');
   if (!b) return;
-  b.innerHTML = '<span class="term-line green">$ A2ASentinel Live Execution Terminal cleared.</span><span class="term-line dim"><span class="term-cursor"></span></span>';
+  b.innerHTML = '<span class="term-line green">$ AgentTrust Live Execution Terminal cleared.</span><span class="term-line dim"><span class="term-cursor"></span></span>';
 }
 
 function log(msg, type = '') {
@@ -565,8 +565,7 @@ async function runStory() {
   termClear();
 
   termPrint("========================================================================", "dim");
-  termPrint("  A2ASentinel -- Runtime Trust Verification for Google A2A Protocol", "purple");
-  termPrint("  EDI Mid-Semester Review Demo & Live Simulation", "cyan");
+  termPrint("  AgentTrust -- Runtime Trust Verification for Google A2A Protocol", "purple");
   termPrint("========================================================================", "dim");
   termPrint("  5-Stage Pipeline: IP Throttle -> Signature -> Rate Limiter -> RBAC -> Injection Filter", "normal");
   termPrint("  Target Server: http://localhost:8001 (Agent B Protected)", "normal");
@@ -595,7 +594,7 @@ async function runStory() {
   log('AgentA → Sentinel: SendMessage (summarize_text)', 'info');
   await delay(400);
 
-  setBanner('🔍 A2ASentinel checking the request...', 'idle');
+  setBanner('🔍 AgentTrust checking the request...', 'idle');
   glowBox('box-s', 'purple');
   const d1 = await runScenario('legitimate');
   await animateStages(null);
@@ -661,7 +660,7 @@ async function runStory() {
   log('AttackerBot → Sentinel: SendMessage (forged signature)', 'warn');
   await delay(400);
 
-  setBanner('🔍 A2ASentinel checking...', 'idle');
+  setBanner('🔍 AgentTrust checking...', 'idle');
   glowBox('box-s', 'purple');
   await runScenario('forged-signature');
   await animateStages(1); // blocked at Stage 1
@@ -680,7 +679,7 @@ async function runStory() {
   );
   log('BLOCKED at Stage 1: forged signature. Agent B never called.', 'err');
 
-  termPrint("  SENTINEL DECISION : BLOCKED by A2ASentinel: invalid signature: all signatures failed cryptographic verification", "red");
+  termPrint("  SENTINEL DECISION : BLOCKED by AgentTrust: invalid signature: all signatures failed cryptographic verification", "red");
   termPrint("  >> RESULT: BLOCKED at Stage 1 (signature verification).", "red");
   termPrint("             Agent B executor log shows NO entry -- never reached.", "dim");
   termPrint("");
@@ -711,7 +710,7 @@ async function runStory() {
   log('ConfusedBot → Sentinel: SendMessage (valid sig, declared: data_export, requesting: translate_text)', 'warn');
   await delay(400);
 
-  setBanner('🔍 A2ASentinel is scanning all 5 stages...', 'idle');
+  setBanner('🔍 AgentTrust is scanning all 5 stages...', 'idle');
   glowBox('box-s', 'purple');
   await runScenario('capability-mismatch');
   await animateStages(3); // blocked at Stage 3 (RBAC)
@@ -729,7 +728,7 @@ async function runStory() {
   );
   log('BLOCKED at Stage 3: capability mismatch. Signature was valid but skills did not match.', 'err');
 
-  termPrint("  SENTINEL DECISION : BLOCKED by A2ASentinel: capability mismatch: requested skill 'translate_text' not in caller's declared skills ['data_export']", "red");
+  termPrint("  SENTINEL DECISION : BLOCKED by AgentTrust: capability mismatch: requested skill 'translate_text' not in caller's declared skills ['data_export']", "red");
   termPrint("  >> RESULT: BLOCKED at Stage 3 (RBAC / capability-match).", "red");
   termPrint("             Stage 1 (signature) PASSED -- proves both checks are independently enforced.", "cyan");
   termPrint("");
@@ -761,14 +760,15 @@ async function runStory() {
   glowBox('box-b', 'green');
   await pulseBox('box-b');
 
-  setBanner('✅ Demo complete! A2ASentinel blocked all attackers. Legitimate agent was never interrupted.', 'green');
+  setBanner('✅ Demo complete! AgentTrust blocked all attackers. Legitimate agent was never interrupted.', 'green');
   setResult('ALLOWED',
     '✅ Legitimate Agent — Always Works',
-    'A2ASentinel only blocks untrusted agents. Verified agents pass through every time.',
+    'AgentTrust only blocks untrusted agents. Verified agents pass through every time.',
     'Please summarize the following research on quantum computing.',
     d5.agent_b_response
   );
-  log('Story demo complete. 2 attacks blocked, legitimate agent unaffected.', 'ok');
+  log('
+  demo complete. 2 attacks blocked, legitimate agent unaffected.', 'ok');
 
   termPrint("  SENTINEL DECISION : ALLOWED", "green");
   termPrint("  AGENT B RESPONSE  : " + d5.agent_b_response, "green");
@@ -871,7 +871,7 @@ async function init() {
   try {
     await fetch('/scenarios');
     document.getElementById('status-bar').innerHTML =
-      'Connected &mdash; <span class="ok">A2ASentinel active on localhost:8001</span>';
+      'Connected &mdash; <span class="ok">AgentTrust active on localhost:8001</span>';
     log('Dashboard ready. Sentinel server connected.', 'ok');
   } catch(e) {
     document.getElementById('status-bar').innerHTML =
