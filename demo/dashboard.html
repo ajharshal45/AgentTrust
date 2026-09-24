@@ -374,6 +374,9 @@
 </div>
 
 <!-- Manual scenario buttons -->
+<div style="text-align:center; margin: 18px 0 10px; font-size: 0.8rem; font-weight: 700; color: #a78bfa; text-transform: uppercase; letter-spacing: 1.5px;">
+  Individual Scenario Tests
+</div>
 <div class="scenario-nav" id="scenario-nav"></div>
 
 <!-- Result -->
@@ -774,8 +777,7 @@ async function runStory() {
     'Please summarize the following research on quantum computing.',
     d5.agent_b_response
   );
-  log('
-  demo complete. 2 attacks blocked, legitimate agent unaffected.', 'ok');
+  log('Story demo complete: 2 attacks blocked, legitimate agent unaffected.', 'ok');
 
   termPrint("  SENTINEL DECISION : ALLOWED", "green");
   termPrint("  AGENT B RESPONSE  : " + d5.agent_b_response, "green");
@@ -790,12 +792,12 @@ async function runStory() {
 // ── Individual scenario buttons ───────────────────────────────────────────
 
 const SCENARIOS_ORDER = [
-  { id: 'legitimate',          icon: '', label: 'Legitimate' },
-  { id: 'forged-signature',    icon: '', label: 'Forged Sig' },
-  { id: 'capability-mismatch', icon: '', label: 'Wrong Skills' },
-  { id: 'prompt-injection',    icon: '', label: 'Injection' },
-  { id: 'hitl-approved',       icon: '', label: 'HITL: Approve' },
-  { id: 'hitl-rejected',       icon: '', label: 'HITL: Reject' },
+  { id: 'legitimate',          label: 'Legitimate', desc: 'Valid Sig & Skills' },
+  { id: 'forged-signature',    label: 'Forged Signature', desc: 'Tampered JWS Sig' },
+  { id: 'capability-mismatch', label: 'Wrong Skills', desc: 'Undeclared Skill' },
+  { id: 'prompt-injection',    label: 'Prompt Injection', desc: 'Override Attack' },
+  { id: 'hitl-approved',       label: 'HITL: Approved', desc: 'Fuzzy Stem -> Approved' },
+  { id: 'hitl-rejected',       label: 'HITL: Rejected', desc: 'Fuzzy Stem -> Rejected' },
 ];
 
 async function runManual(id) {
@@ -804,6 +806,11 @@ async function runManual(id) {
   document.getElementById('block-x').style.display = 'none';
   resetArrows(); resetStages();
   glowBox('box-a', ''); glowBox('box-s', ''); glowBox('box-b', '');
+
+  // Highlight active button
+  document.querySelectorAll('.scenario-nav .btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.getElementById('btn-' + id);
+  if (activeBtn) activeBtn.classList.add('active');
 
   let data;
   try {
@@ -867,13 +874,17 @@ async function runManual(id) {
 
 async function init() {
   const nav = document.getElementById('scenario-nav');
-  SCENARIOS_ORDER.forEach(s => {
-    const btn = document.createElement('button');
-    btn.className = 'btn';
-    btn.innerHTML = s.icon + ' ' + s.label;
-    btn.onclick = () => runManual(s.id);
-    nav.appendChild(btn);
-  });
+  if (nav) {
+    nav.innerHTML = '';
+    SCENARIOS_ORDER.forEach(s => {
+      const btn = document.createElement('button');
+      btn.className = 'btn';
+      btn.id = 'btn-' + s.id;
+      btn.innerHTML = `<span style="font-weight:700;display:block;">${s.label}</span><span style="font-size:0.68rem;opacity:0.65;display:block;margin-top:2px;">${s.desc}</span>`;
+      btn.onclick = () => runManual(s.id);
+      nav.appendChild(btn);
+    });
+  }
 
   try {
     await fetch('/scenarios');
