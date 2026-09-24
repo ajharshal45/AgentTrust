@@ -47,17 +47,28 @@ def main():
 
     if tamper_mode:
         print("--- Audit Ledger Verification (with --tamper demo) ---")
+        original_content = None
+        if LEDGER_FILE_PATH.exists():
+            with open(LEDGER_FILE_PATH, "r", encoding="utf-8") as f:
+                original_content = f.read()
+
         if not tamper_ledger():
             sys.exit(1)
 
-        valid, result_msg = verify_chain()
-        print(f"Verification Result: {result_msg}")
-        if not valid:
-            print(">> SUCCESS: Audit ledger correctly detected cryptographic tampering!")
-            sys.exit(0)
-        else:
-            print(">> ERROR: Tamper detection failed.")
-            sys.exit(1)
+        try:
+            valid, result_msg = verify_chain()
+            print(f"Verification Result: {result_msg}")
+            if not valid:
+                print(">> SUCCESS: Audit ledger correctly detected cryptographic tampering!")
+            else:
+                print(">> ERROR: Tamper detection failed.")
+                sys.exit(1)
+        finally:
+            if original_content is not None:
+                with open(LEDGER_FILE_PATH, "w", encoding="utf-8") as f:
+                    f.write(original_content)
+                print("[DEMO] Ledger automatically restored to valid cryptographic state.")
+        sys.exit(0)
     else:
         print("--- Audit Ledger Verification ---")
         valid, result_msg = verify_chain()
